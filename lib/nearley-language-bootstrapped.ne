@@ -41,7 +41,7 @@ expr -> expr_member
       | expr whit expr_member  {% function(d){ return d[0].concat([d[2]]); } %}
 
 word -> [\w\?\+]  {% function(d){ return d[0]; } %}
-      | word [\w\?\+]  {% function(d){ return d[0]+d[1]; } %}
+      | word [\.\w\?\+]  {% function(d){ return d[0]+d[1]; } %}
 
 string -> dqstring {% function(d) {return { literal: d[0] }; } %}
 #string -> "\"" charset "\""  {% function(d) { return { literal: d[1].join("") }; } %}
