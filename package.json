@@ -4,6 +4,7 @@
   "description": "Simple, fast, powerful parser toolkit for JavaScript.",
   "main": "lib/nearley.js",
   "dependencies": {
+    "moo": "git+ssh://git@github.com/tjvr/moo.git#b2f0470",
     "nomnom": "~1.6.2",
     "railroad-diagrams": "^1.0.0",
     "randexp": "^0.4.2"

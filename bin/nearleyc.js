@@ -36,7 +36,7 @@ var opts = nomnom
     })
     .parse();
 
-var input = opts.file ? fs.createReadStream(opts.file) : process.stdin;
+var input = opts.file ? fs.readFileSync(opts.file, 'utf-8') : process.stdin.read();
 var output = opts.out ? fs.createWriteStream(opts.out) : process.stdout;
 
 var parserGrammar = require('../lib/nearley-language-bootstrapped.js');
@@ -44,10 +44,11 @@ var parser = new nearley.Parser(parserGrammar.ParserRules, parserGrammar.ParserS
 var generate = require('../lib/generate.js');
 var lint = require('../lib/lint.js');
 
-input
-    .pipe(new StreamWrapper(parser))
-    .on('finish', function() {
-        var c = Compile(parser.results[0], opts);
-        lint(c, {'out': process.stderr});
-        output.write(generate(c, opts.export));
-    });
+var tokens = parserGrammar.lex(input).lexAll()
+parser.feed(tokens)
+
+var c = Compile(parser.results[0], opts);
+lint(c, {'out': process.stderr});
+output.write(generate(c, opts.export));
+
+

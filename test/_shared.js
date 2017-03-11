@@ -3,7 +3,8 @@ var fs = require('fs');
 
 var nearley = require('../lib/nearley.js');
 var Compile = require('../lib/compile.js');
-var parserGrammar = nearley.Grammar.fromCompiled(require('../lib/nearley-language-bootstrapped.js'));
+var bootstrapped = require('../lib/nearley-language-bootstrapped.js');
+var parserGrammar = nearley.Grammar.fromCompiled(bootstrapped);
 var generate = require('../lib/generate.js');
 
 function parse(grammar, input) {
@@ -13,8 +14,11 @@ function parse(grammar, input) {
 }
 
 function compileOnly(source) {
+    // tokenize
+    var tokens = bootstrapped.lex(source).lexAll()
+
     // parse
-    var results = parse(parserGrammar, source);
+    var results = parse(parserGrammar, tokens);
 
     // compile
     var c = Compile(results[0], {});
