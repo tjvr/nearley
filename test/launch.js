@@ -4,6 +4,7 @@ var child_process = require('child_process')
 
 var shared = require('./_shared.js');
 var compile = shared.compile
+  , compileOnly = shared.compileOnly
   , nearley = shared.nearley
   , evalGrammar = shared.evalGrammar
   , parse = shared.parse
@@ -41,6 +42,14 @@ describe("nearleyc", function() {
         var grammar = evalGrammar(read("test/tmp.coffeescript-test.js"));
         parse(grammar, "ABCDEFZ12309")
             .should.deep.equal([ [ 'ABCDEFZ', '12309' ] ]);
+    });
+
+    it('can export things', function() {
+        var g = compileOnly(read('test/export.ne'));
+        var f = new Function('module', g);
+        var m = {exports: {}};
+        f(m);
+        m.exports.foo.should.equal(42);
     });
 
     it('calculator example', function() {
